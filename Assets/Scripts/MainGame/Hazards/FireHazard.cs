@@ -26,9 +26,8 @@ public class FireHazard : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.CompareTag("PlayerCharacter"))
+        if (other.gameObject.CompareTag(Tags.PlayerTag))
         {
-            Debug.Log("Player entered this hazard");
             FireEnteredEventArgs fireEnteredEventArgs = new FireEnteredEventArgs
             {
                 damageDealt = fireHazardData.GetRandomFireDamage(),

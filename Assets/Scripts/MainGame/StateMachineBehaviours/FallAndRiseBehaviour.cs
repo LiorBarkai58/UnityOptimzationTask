@@ -11,7 +11,7 @@ public class FallAndRiseBehaviour : StateMachineBehaviour
         
         if(!playerCharacterController)
             playerCharacterController = animator.GetComponent<PlayerCharacterController>();
-        
+        if(!playerCharacterController) return;
         playerCharacterController.ToggleMoving(false);
     }
 
@@ -19,12 +19,10 @@ public class FallAndRiseBehaviour : StateMachineBehaviour
     {
         base.OnStateMachineExit(animator, stateMachinePathHash);
         
+        if(!playerCharacterController) return;
+
         playerCharacterController.ToggleMoving(true);
     }
 
-    public override void OnStateMachineEnter(Animator animator, int stateMachinePathHash, AnimatorControllerPlayable controller)
-    {
-        base.OnStateMachineEnter(animator, stateMachinePathHash, controller);
-      
-    }
+    
 }

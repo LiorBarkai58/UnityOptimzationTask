@@ -11,7 +11,6 @@ public class FireHazardScriptableObject : ScriptableObject
     public int GetRandomFireDamage()
     {
         int randomDamage = Random.Range(minimumDamage, maximumDamage + 1);
-        Debug.Log("Random damage is " + randomDamage);
         return randomDamage;
     }
 }
