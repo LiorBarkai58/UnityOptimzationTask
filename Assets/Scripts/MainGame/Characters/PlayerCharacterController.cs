@@ -1,12 +1,7 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.AI.Navigation;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 
 public class PlayerCharacterController : MonoBehaviour
 {
@@ -14,12 +9,22 @@ public class PlayerCharacterController : MonoBehaviour
     [SerializeField] private UnityEvent<int> onTakeDamageEvent;
 
     [Header("Navigation")] 
-    private NavMeshAgent navMeshAgent;
+    [SerializeField] private NavMeshAgent navMeshAgent;
 
-    [SerializeField] private Transform waypoint;
     [SerializeField] private Transform[] pathWaypoints;
     
-    private Animator animator;
+    [SerializeField] private Animator animator;
+
+    [SerializeField] private Camera mainCamera;
+
+    private static readonly string speedParameter = "Speed";
+    private static readonly int SpeedHash = Animator.StringToHash(speedParameter);
+
+    private const int AnimatorSecondLayer = 1;
+
+    private const int MudNavigationLayer = 3;
+
+    private const int ResistenceToLayerValue = 1;
 
     public int Hp
     {
@@ -63,7 +68,7 @@ public class PlayerCharacterController : MonoBehaviour
     {
         hp -= damageAmount;
         float hpPercentLeft = (float) hp / startingHp;
-        animator.SetLayerWeight(1, (1 - hpPercentLeft));
+        animator.SetLayerWeight(AnimatorSecondLayer, (1 - hpPercentLeft));
         onTakeDamageEvent.Invoke(hp);
         onTakeDamageEventAction?.Invoke(hp);
     }
@@ -71,8 +76,6 @@ public class PlayerCharacterController : MonoBehaviour
     private void Start()
     {
         hp = 100;
-        animator = GetComponent<Animator>();
-        navMeshAgent = GetComponent<NavMeshAgent>();
         startingHp = hp;
         SetMudAreaCost();
         ToggleMoving(true);
@@ -83,7 +86,7 @@ public class PlayerCharacterController : MonoBehaviour
     {
         if (hasBloodyBoots)
         {
-            navMeshAgent.SetAreaCost(3, 1);
+            navMeshAgent.SetAreaCost(MudNavigationLayer, ResistenceToLayerValue);
         }
     }
 
@@ -105,27 +108,19 @@ public class PlayerCharacterController : MonoBehaviour
         }
 
         if (animator)
-            animator.SetFloat("Speed", navMeshAgent.velocity.magnitude);
+            animator.SetFloat(SpeedHash, navMeshAgent.velocity.magnitude);
         
-        if (Camera.main != null)
+        if (mainCamera != null)
         {
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit, 100f))
-            {
-                //We want to know what the mouse is hovering now
-                Debug.Log($"Hit: {hit.collider.name}");
-            }
+            // Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
+            // if (Physics.Raycast(ray, out RaycastHit hit, 100f))
+            // {
+            //     //We want to know what the mouse is hovering now
+            //     Debug.Log($"Hit: {hit.collider.name}");
+            // }
         }
 
     }
     
-    private void OnEnable()
-    {
-        
-    }
-
-    private void OnDisable()
-    {
-        
-    }
+    
 }

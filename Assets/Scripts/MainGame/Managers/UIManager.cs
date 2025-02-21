@@ -9,7 +9,13 @@ public class UIManager : MonoBehaviour
     public TextMeshProUGUI hpText;
     
     [SerializeField] private PlayerCharacterController bobby;
-    [SerializeField] private GameObject skillsHolder;
+
+    // [SerializeField] private GameObject skillsHolder;
+
+    [SerializeField] private List<SkillButtonUI> skillsButtonsUI;
+
+    [SerializeField] private Sprite[] skillIcons;
+
     
     public void RefreshHPText(int newHP)
     {
@@ -24,17 +30,23 @@ public class UIManager : MonoBehaviour
     private void Start()
     {
         hpText.text = bobby.Hp.ToString();
+        //Moved logic from update that only needs to happen once
+        for(int i = 0; i < skillsButtonsUI.Count;i++){
+            skillsButtonsUI[i].skillIcon.sprite = skillIcons[i];
+            skillsButtonsUI[i].skillNameText.text = $"Skill {i+1}";
+        }
     }
 
     private void Update()
     {
-        skillsHolder = GameObject.Find("Skills Group");
-        GameObject[] skillsButtonUI = skillsHolder.GetComponentsInChildren<GameObject>();
+        // skillsHolder = GameObject.Find("Skills Group");
+        // GameObject[] skillsButtonUI = skillsHolder.GetComponentsInChildren<GameObject>();
         
-        for (int i = 0; i < skillsButtonUI.Length; i++)
-        {
-            skillsButtonUI[i].GetComponent<SkillButtonUI>().skillIcon.sprite =  skillsButtonUI[i].GetComponent<SkillButtonUI>().skillIcons[i];
-            skillsButtonUI[i].GetComponent<SkillButtonUI>().skillNameText.text = "Skill " + (i + 1);
-        }
+        // for (int i = 0; i < skillsButtonUI.Length; i++)
+        // {
+        //     skillsButtonUI[i].GetComponent<SkillButtonUI>().skillIcon.sprite =  skillsButtonUI[i].GetComponent<SkillButtonUI>().skillIcons[i];
+        //     skillsButtonUI[i].GetComponent<SkillButtonUI>().skillNameText.text = "Skill " + (i + 1);
+        // }
+        
     }
 }
